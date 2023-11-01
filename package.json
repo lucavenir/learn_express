@@ -4,7 +4,8 @@
   "description": "learning express",
   "main": "app.mjs",
   "scripts": {
-    "test": "npm test"
+    "test": "echo \"Error: no test command specificed, yet\" && exit 1",
+    "start": "nodemon app.js"
   },
   "keywords": [
     "learn",
@@ -14,5 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
