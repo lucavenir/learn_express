@@ -1,0 +1,18 @@
+{
+  "name": "learn_express",
+  "version": "1.0.0",
+  "description": "learning express",
+  "main": "app.mjs",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "learn",
+    "express"
+  ],
+  "author": "venir",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
