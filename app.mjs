@@ -1,15 +1,24 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import connection from './db/connect.js';
 
-// testing
+// starup
 dotenv.config();
-console.log(process.env.MONGO_URI);
-
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-    res.send("hello");
-});
+async function start() {
+    try {
+        console.log("db connection..");
+        await connection(process.env.MONGO_URI);
+        console.log("db connected");
+        console.log("starting our server..");
+        app.listen(port, () => {
+            console.log(`server running on port ${port}`);
+        });
+    } catch (e) {
+        console.log(e);
+    }
+}
 
-app.listen(port);
+start();
