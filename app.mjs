@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connection from './db/connect.js';
+import InvalidCustomerId from './errors/invalidCustomerId.js';
 
 // starup
 dotenv.config();
@@ -27,12 +28,14 @@ async function start() {
         });
         app.get("/customer/:id", (req, res) => {
             const id = req.params.id;
-            if (isNaN(id)) throw `Invalid customer id: ${id}`;
+            if (isNaN(id)) throw new InvalidCustomerId(id);
             res.json({ id });
         });
         
         app.use((err, req, res, next) => {
-            res.status(400).json({ error: err });
+            if (!(err instanceof InvalidCustomerId)) return res.status(500).json({ error: err });
+
+            res.status(err.statusCode).json({ error: err.message });
         });
         
         app.listen(port, () => {
