@@ -20,16 +20,21 @@ async function start() {
             next();
         });
         app.get("/", (req, res) => {
-            throw "lmaooooooo";
             const seconds = req.requestSeconds;
             req.accessGranted
                 ? res.status(200).json({ msg: `Access granted at ${seconds}` })
                 : res.status(403).json({ msg: `Access denied at ${seconds}` });
         });
-        app.use((err, req, res, next) => {
-            console.error(err);
-            res.status(500).send('Something definetively went bananas\n');
+        app.get("/customer/:id", (req, res) => {
+            const id = req.params.id;
+            if (isNaN(id)) throw `Invalid customer id: ${id}`;
+            res.json({ id });
         });
+        
+        app.use((err, req, res, next) => {
+            res.status(400).json({ error: err });
+        });
+        
         app.listen(port, () => {
             console.log(`server running on port ${port}`);
         });
