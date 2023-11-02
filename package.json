@@ -14,7 +14,8 @@
   "author": "venir",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongodb": "^6.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
