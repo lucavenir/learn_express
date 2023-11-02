@@ -14,18 +14,16 @@ async function start() {
         console.log("db connected");
         console.log("starting our server..");
         app.use((req, res, next) => {
-            console.log('first');
+            const seconds = new Date().getSeconds();
+            req.accessGranted = seconds % 2 === 0;
+            req.requestSeconds = seconds;
             next();
         });
-        app.use((req, res, next) => {
-            console.log('second');
-            // next(); // no next for you >:(
-            res.json({ message: 'esticazzi' });
-            next();
-        });
-        app.use((req, res, next) => {
-            console.log('third');
-            next();
+        app.get("/", (req, res) => {
+            const seconds = req.requestSeconds;
+            req.accessGranted
+                ? res.status(200).json({ msg: `Access granted at ${seconds}` })
+                : res.status(403).json({ msg: `Access denied at ${seconds}` });
         });
         app.listen(port, () => {
             console.log(`server running on port ${port}`);
