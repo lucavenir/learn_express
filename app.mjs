@@ -14,13 +14,19 @@ async function start() {
         console.log("db connected");
         console.log("starting our server..");
         app.use((req, res, next) => {
-            console.log('Time: ', Date.now());
+            console.log('first');
             next();
         });
-        app.use('/', (req, res, next) => {
-            console.log('request url: ', req.originalUrl);
+        app.use((req, res, next) => {
+            console.log('second');
+            // next(); // no next for you >:(
+            res.json({ message: 'esticazzi' });
             next();
-        })
+        });
+        app.use((req, res, next) => {
+            console.log('third');
+            next();
+        });
         app.listen(port, () => {
             console.log(`server running on port ${port}`);
         });
