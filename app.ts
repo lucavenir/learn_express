@@ -1,17 +1,17 @@
-// import express from "express";
+import express from "express";
 import dotenv from "dotenv";
-// import connection from "./db/connect.js";
+import connection from "./db/connect";
 // import InvalidCustomerId from "./errors/invalidCustomerId.js";
 // import customer from "./routes/customer.js";
 
 async function start() {
    // startup
    dotenv.config();
-   // const app = express();
-   // const port = process.env.PORT || 3000;
+   const app = express();
+   const port = process.env.PORT || 3000;
 
    console.log("db connection..");
-   // await connection(process.env.MONGO_URI);
+   await connection(process.env.MONGO_URI!);
    console.log("db connected");
    console.log("starting our server..");
 
@@ -41,9 +41,9 @@ async function start() {
    //    res.status(err.statusCode).json({ error: err.message });
    // });
 
-   // app.listen(port, () => {
-   //    console.log(`server running on port ${port}`);
-   // });
+   app.listen(port, () => {
+      console.log(`server running on port ${port}`);
+   });
 }
 
 start();
