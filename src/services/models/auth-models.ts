@@ -14,9 +14,14 @@ export interface User {
    username: string;
 }
 
-// response (but also an entity..?)
+// response
 export interface UserAndCredentials {
    user: User;
    token: string;
    refresh: string;
+}
+
+export interface LoginParams {
+   email: string;
+   password: string;
 }
