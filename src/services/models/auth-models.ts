@@ -1,4 +1,3 @@
-// request
 export interface UserCreationParams {
    email: string;
    name: string;
@@ -6,7 +5,6 @@ export interface UserCreationParams {
    password: string;
 }
 
-// entity
 export interface User {
    id: string;
    name: string;
@@ -14,7 +12,6 @@ export interface User {
    username: string;
 }
 
-// response
 export interface UserAndCredentials {
    user: User;
    token: string;
@@ -24,4 +21,9 @@ export interface UserAndCredentials {
 export interface LoginParams {
    email: string;
    password: string;
+}
+
+export interface RefreshParams {
+   email: string;
+   refreshToken: string;
 }

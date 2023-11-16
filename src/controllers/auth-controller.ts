@@ -1,8 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { Request, Body, Controller, OperationId, Post, Delete, Route, Tags, Security } from "tsoa";
-import { LoginParams, UserAndCredentials, UserCreationParams } from "../services/models/auth-models";
+import { LoginParams, RefreshParams, UserAndCredentials, UserCreationParams } from "../services/models/auth-models";
 import { Request as ExpressRequest } from "express";
 import AuthService from "../services/auth-service";
+import AuthenticatedUser from "../middleware/models/authenticated-user";
 
 @Route("/api/v1/auth")
 @Tags("Auth")
@@ -15,21 +16,22 @@ export class AuthController extends Controller {
       return service.register(requestBody);
    }
 
-   // TODO: remove this dummy endpoint later, when we have proper endpoints that use authentication
-   @Post("dummy")
-   @OperationId("dummy")
-   @Security("jwt")
-   public async dummy(): Promise<void> {
-      this.setStatus(StatusCodes.OK);
-      return Promise.resolve();
-   }
-
    @Post("login")
    @OperationId("loginUser")
    public async login(@Body() requestBody: LoginParams): Promise<UserAndCredentials> {
       this.setStatus(StatusCodes.OK);
       const service = new AuthService();
       return service.login(requestBody);
+   }
+
+   @Post("refresh")
+   @Security("refresh_jwt")
+   @OperationId("refreshUser")
+   public async refresh(@Request() request: ExpressRequest, @Body() requestBody: RefreshParams): Promise<UserAndCredentials> {
+      this.setStatus(StatusCodes.OK);
+      const user = request.user as AuthenticatedUser;
+      const service = new AuthService();
+      return service.refresh(requestBody, user);
    }
 
    @Delete()
@@ -41,5 +43,3 @@ export class AuthController extends Controller {
       await new AuthService().logout(jti);
    }
 }
-
-
