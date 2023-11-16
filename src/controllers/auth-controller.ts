@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { Body, Controller, OperationId, Post, Route, Tags, Security } from "tsoa";
+import { Request, Body, Controller, OperationId, Post, Delete, Route, Tags, Security } from "tsoa";
 import { LoginParams, UserAndCredentials, UserCreationParams } from "../services/models/auth-models";
+import { Request as ExpressRequest } from "express";
 import AuthService from "../services/auth-service";
 
 @Route("/api/v1/auth")
@@ -30,4 +31,15 @@ export class AuthController extends Controller {
       const service = new AuthService();
       return service.login(requestBody);
    }
+
+   @Delete()
+   @Security("jwt")
+   @OperationId("logoutUser")
+   public async logout(@Request() request: ExpressRequest): Promise<void> {
+      this.setStatus(StatusCodes.NO_CONTENT);
+      const jti = request.user!.jti;
+      await new AuthService().logout(jti);
+   }
 }
+
+

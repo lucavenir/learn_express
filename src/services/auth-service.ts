@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import User from "../db/models/user";
+import Blacklist from "../db/models/blacklist";
 import { LoginParams, UserAndCredentials, UserCreationParams } from "./models/auth-models";
 import { UnauthenticatedError } from "../errors";
 
@@ -44,5 +45,9 @@ export default class AuthService {
          token: token,
          refresh: refresh,
       }
+   }
+
+   public async logout(jti: String): Promise<void> {
+      await Blacklist.create({ object: jti, kind: 'jti' });
    }
 }
