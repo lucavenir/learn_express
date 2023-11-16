@@ -4,9 +4,9 @@ import connection from "./db/connect";
 import { serve as swaggerServe, setup as swaggerSetup } from "swagger-ui-express";
 import * as swaggerJson from "./tsoa/tsoa.json"
 import { RegisterRoutes } from "./routes/routes";
+import { handleErrors } from "./middleware/errors";
 
 async function start() {
-   // startup
    dotenv.config();
    const port = process.env.PORT;
 
@@ -24,6 +24,8 @@ async function start() {
       res.setHeader("Content-Type", "application/json");
       res.sendFile(`${__dirname}/tsoa/tsoa.json`);
    });
+
+   app.use(handleErrors);
 
    await connection(process.env.MONGO_URI!);
 
