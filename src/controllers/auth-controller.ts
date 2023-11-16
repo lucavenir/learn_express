@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { Request, Body, Controller, OperationId, Post, Delete, Route, Tags, Security } from "tsoa";
+import { Request, Body, Controller, OperationId, Post, Route, Tags, Security } from "tsoa";
 import { LoginParams, RefreshParams, UserAndCredentials, UserCreationParams } from "../services/models/auth-models";
 import { Request as ExpressRequest } from "express";
 import AuthService from "../services/auth-service";
@@ -34,7 +34,7 @@ export class AuthController extends Controller {
       return service.refresh(requestBody, user);
    }
 
-   @Delete()
+   @Post("logout")
    @Security("jwt")
    @OperationId("logoutUser")
    public async logout(@Request() request: ExpressRequest): Promise<void> {
