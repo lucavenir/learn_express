@@ -5,6 +5,7 @@ import { serve as swaggerServe, setup as swaggerSetup } from "swagger-ui-express
 import * as swaggerJson from "./tsoa/tsoa.json"
 import { RegisterRoutes } from "./routes/routes";
 import { handleErrors } from "./middleware/errors";
+import fileUpload from "express-fileupload";
 
 async function start() {
    dotenv.config();
@@ -13,6 +14,8 @@ async function start() {
    const app = express();
    app.use(urlencoded({ extended: true }));
    app.use(json());
+   const fileUploadConfig = { useTempFiles: true, tempFileDir: "/tmp/" };
+   app.use(fileUpload(fileUploadConfig));
    RegisterRoutes(app);
    app.use(
       ["/openapi", "/docs", "/swagger"],

@@ -14,7 +14,7 @@ export function handleErrors(err: Error, _req: Request, res: Response, _next: Ne
       message: err.message,
    };
 
-   // user exists (TODO: this shouldn't be here, *at all*)
+   // user exists
    if (err.name === "MongoServerError" && err.code === 11000) {
       error.message = "User already exists!";
       error.code = StatusCodes.BAD_REQUEST;

@@ -3,3 +3,8 @@ export interface Profile {
    location?: string;
    website?: string;
 }
+
+export interface ProfilePictureInfo {
+   pictureName: string;
+   options: any;
+}
