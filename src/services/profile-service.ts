@@ -2,8 +2,8 @@ import { InvalidMimeTypeError, PictureNotFoundError, UserProfileNotFoundError } 
 import ProfileDb from "../db/models/profile";
 import { Profile, ProfilePictureInfo } from "./models/profile-models";
 import { UploadedFile } from "express-fileupload";
-import { computeUserPictureName, getProfilePicturePath, getProfileUploadsDir, getRootImagesUploadsDir } from "../controllers/utils";
-import { mkdir, stat } from "node:fs/promises";
+import { computeUserPictureName, getProfilePicturePath, getProfileUploadsDir } from "../controllers/utils";
+import { mkdir, stat, unlink } from "node:fs/promises";
 
 export default class ProfileService {
    public async get(userId: string): Promise<Profile> {
@@ -70,6 +70,15 @@ export default class ProfileService {
             pictureName,
             options,
          };
+      } catch {
+         throw new PictureNotFoundError();
+      }
+   }
+
+   public async deleteProfilePicture(userId: string): Promise<void> {
+      try {
+         const photoPath = getProfilePicturePath(userId);
+         await unlink(photoPath);
       } catch {
          throw new PictureNotFoundError();
       }

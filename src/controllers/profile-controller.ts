@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { Profile } from "../services/models/profile-models";
 import ProfileService from "../services/profile-service";
 import {
-   Controller, Request, Body, Response, Get, OperationId, Path, Route, Security, Tags, Post
+   Controller, Request, Body, Response, Delete, Get, Post, OperationId, Path, Route, Security, Tags,
 } from "tsoa";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { NoPictureUploadedError } from "../errors";
@@ -62,5 +62,17 @@ export class ProfileController extends Controller {
             resolve();
          });
       });
+   }
+
+   @Delete("picture")
+   @OperationId("deleteProfilePicture")
+   @Security("jwt")
+   @Response(StatusCodes.NO_CONTENT)
+   @Response(StatusCodes.NOT_FOUND, "No picture found")
+   public deleteProfilePicture(@Request() request: ExpressRequest): Promise<void> {
+      const user = request.user as { id: string };
+      this.setStatus(StatusCodes.NO_CONTENT);
+      const service = new ProfileService();
+      return service.deleteProfilePicture(user.id);
    }
 }
