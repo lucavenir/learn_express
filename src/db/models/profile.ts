@@ -32,7 +32,7 @@ const ProfileSchema = new Schema(
    { timestamps: true }
 );
 
-ProfileSchema.methods.toJSON = function (): any {
+ProfileSchema.methods.toJson = function (): any {
    return {
       bio: this.bio,
       location: this.location,
@@ -45,7 +45,7 @@ interface ProfileDocument extends Document {
    bio?: string;
    location?: string;
    website?: string;
-   toJSON: () => any;
+   toJson: () => any;
 }
 
 export default model<ProfileDocument>("Profile", ProfileSchema);

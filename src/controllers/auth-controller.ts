@@ -6,7 +6,7 @@ import AuthService from "../services/auth-service";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 
 @Route("/api/v1/auth")
-@Tags("Auth")
+@Tags("auth")
 export class AuthController extends Controller {
    @Post("register")
    @OperationId("registerUser")

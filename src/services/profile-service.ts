@@ -10,7 +10,7 @@ export default class ProfileService {
       const profile = await ProfileDb.findOne({ userId });
       if (!profile) throw new UserProfileNotFoundError();
 
-      const json = profile.toJSON();
+      const json = profile.toJson();
       return json as Profile;
    }
 
@@ -26,7 +26,7 @@ export default class ProfileService {
          { upsert: true, new: true, runValidators: true }
       );
 
-      const json = profile.toJSON();
+      const json = profile.toJson();
       return json as Profile;
    }
 
