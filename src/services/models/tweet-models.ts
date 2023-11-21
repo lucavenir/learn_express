@@ -14,3 +14,9 @@ export interface Tweet {
    createdAt: Date;
    updatedAt: Date;
 }
+
+export interface Like {
+   id: string;
+   userId: string;
+   postId: string;
+}

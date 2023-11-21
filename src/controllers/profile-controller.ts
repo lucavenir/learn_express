@@ -11,7 +11,7 @@ import { NoPictureUploadedError } from "../errors";
 @Tags("profile")
 export class ProfileController extends Controller {
    @Response(StatusCodes.OK)
-   @Get("info/{userId}")
+   @Get("{userId}")
    @OperationId("getProfile")
    @Security("jwt")
    public async get(@Path() userId: string): Promise<Profile> {
@@ -21,7 +21,7 @@ export class ProfileController extends Controller {
    }
 
    @Response(StatusCodes.OK)
-   @Post("info")
+   @Post("")
    @OperationId("setProfile")
    @Security("jwt")
    public async set(@Request() request: ExpressRequest, @Body() body: Profile): Promise<Profile> {
