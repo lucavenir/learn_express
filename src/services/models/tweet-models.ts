@@ -20,3 +20,13 @@ export interface Like {
    userId: string;
    postId: string;
 }
+
+export interface Attachment {
+   id: string;
+   mimeType: string
+}
+
+export interface TweetAttachmentInfo {
+   pictureName: string;
+   options: any;
+}

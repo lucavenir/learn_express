@@ -2,7 +2,7 @@ import { InvalidMimeTypeError, PictureNotFoundError, UserProfileNotFoundError } 
 import ProfileDb from "../db/models/profile";
 import { Profile, ProfilePictureInfo } from "./models/profile-models";
 import { UploadedFile } from "express-fileupload";
-import { computeUserPictureName, getProfilePicturePath, getProfileUploadsDir } from "../controllers/utils";
+import { computePictureName, getProfilePicturePath, getProfileUploadsDir } from "../controllers/utils";
 import { mkdir, stat, unlink } from "node:fs/promises";
 
 export default class ProfileService {
@@ -56,7 +56,7 @@ export default class ProfileService {
          const isFile = status.isFile();
          if (!isFile) throw new Error();
 
-         const pictureName = computeUserPictureName(userId);
+         const pictureName = computePictureName(userId);
          const options = {
             root: getProfileUploadsDir(),
             dotfiles: "deny",

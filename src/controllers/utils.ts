@@ -1,9 +1,5 @@
 export function getProfilePicturePath(userId: string): string {
-   return `${getProfileUploadsDir()}/${computeUserPictureName(userId)}`;
-}
-
-export function computeUserPictureName(userId: string): string {
-   return `${userId}.jpg`;
+   return `${getProfileUploadsDir()}/${computePictureName(userId)}`;
 }
 
 export function getProfileUploadsDir(): string {
@@ -14,6 +10,18 @@ export function getRootImagesUploadsDir(): string {
    return `${getRootAssetsDir()}/images`;
 }
 
+export function getAttachmentPath(attachmentId: string): string {
+   return `${getRootAttachmentsUploadsDir()}/${computePictureName(attachmentId)}`;
+}
+
+export function getRootAttachmentsUploadsDir(): string {
+   return `${getRootAssetsDir()}/attachment`;
+}
+
 export function getRootAssetsDir(): string {
    return `${__dirname}/../uploads`;
+}
+
+export function computePictureName(name: string): string {
+   return `${name}.jpg`;
 }

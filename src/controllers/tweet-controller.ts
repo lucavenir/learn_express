@@ -1,6 +1,6 @@
-import { Request as ExpressRequest } from "express";
-import { CreateTweetParams, Like, Tweet } from "../services/models/tweet-models";
-import { Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path, Delete } from "tsoa";
+import { Request as ExpressRequest, Response as ExpressResponse } from "express";
+import { Attachment, CreateTweetParams, Like, Tweet } from "../services/models/tweet-models";
+import { Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path, Delete, Patch, Get } from "tsoa";
 import { StatusCodes } from "http-status-codes";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import TweetService from "../services/tweet-service";
@@ -59,5 +59,32 @@ export class TweetController extends Controller {
       const user = request.user as AuthenticatedUser;
       const service = new TweetService();
       return service.unlike(user.id, tweetId);
+   }
+
+   @Patch("/{tweetId}")
+   @OperationId("attachToTweet")
+   @Security("jwt")
+   @Response(StatusCodes.CREATED)
+   @Response(StatusCodes.INTERNAL_SERVER_ERROR, "Could not attach picture to tweet")
+   @Response(StatusCodes.NOT_FOUND, "Tweet not found")
+   public async attachToTweet(@Path() tweetId: string, @Request() request: ExpressRequest): Promise<Attachment> {
+      const user = request.user as AuthenticatedUser;
+      const userId = user.id;
+      const service = new TweetService();
+      return service.attachToTweet(userId, tweetId, request as any);
+   }
+
+   @Get("/{tweetId}")
+   @OperationId("getTweetAttachments")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.NOT_FOUND, "Picture not found")
+   public async getAttachment(@Path() tweetId: string, @Request() request: ExpressRequest): Promise<void> {
+      const service = new TweetService();
+      const info = await service.getTweetAttachment(tweetId);
+      const response = request.res as ExpressResponse;
+      return new Promise<void>((resolve, reject) => {
+         response.sendFile(info.pictureName, info.options, (err) => { if (err) return reject(err); return resolve(); });
+      });
    }
 }

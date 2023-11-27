@@ -8,3 +8,5 @@ export { PictureNotFoundError } from "./picture-not-found-error";
 export { TweetNotFoundError } from "./invalid-tweet-id-error";
 export { InvalidInputError } from "./invalid-input-error";
 export { LikeNotFound } from "./like_not_found";
+export { InternalServerError } from "./internal-server-error";
+export { AttachmentNotFoundError } from "./attachment-not-found-error";
