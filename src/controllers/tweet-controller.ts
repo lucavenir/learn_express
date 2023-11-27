@@ -1,6 +1,6 @@
 import { Request as ExpressRequest } from "express";
 import { CreateTweetParams, Like, Tweet } from "../services/models/tweet-models";
-import { Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path } from "tsoa";
+import { Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path, Delete } from "tsoa";
 import { StatusCodes } from "http-status-codes";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import TweetService from "../services/tweet-service";
@@ -35,12 +35,29 @@ export class TweetController extends Controller {
    @Security("jwt")
    @Response(StatusCodes.CREATED)
    @Response(StatusCodes.NOT_FOUND, "tweet not found")
-   public async reactToPost(
+   public async likeTweet(
       @Path() tweetId: string,
       @Request() request: ExpressRequest,
    ): Promise<Like> {
       const user = request.user as AuthenticatedUser;
       const service = new TweetService();
       return service.like(user.id, tweetId);
+   }
+
+   /**
+   * Removes a like from a tweet.
+   */
+   @Delete("/{tweetId}/like")
+   @OperationId("unlikeTweet")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.NOT_FOUND, "reaction not found")
+   public async unlikeTweet(
+      @Path() tweetId: string,
+      @Request() request: ExpressRequest,
+   ): Promise<Like> {
+      const user = request.user as AuthenticatedUser;
+      const service = new TweetService();
+      return service.unlike(user.id, tweetId);
    }
 }

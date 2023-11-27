@@ -1,6 +1,6 @@
 import TweetDb from "../db/models/tweet";
 import LikeDb from "../db/models/like";
-import { TweetNotFoundError } from "../errors";
+import { LikeNotFound, TweetNotFoundError } from "../errors";
 import { CreateTweetParams, Like, Tweet } from "./models/tweet-models";
 
 export default class TweetService {
@@ -39,5 +39,12 @@ export default class TweetService {
 
       const json = like.toJson() as Like;
       return json;
+   }
+
+   public async unlike(userId: string, tweetId: string): Promise<Like> {
+      const like = await LikeDb.findOneAndDelete({ userId, tweetId });
+      if (!like) throw new LikeNotFound();
+
+      return like.toJson() as Like;
    }
 }
