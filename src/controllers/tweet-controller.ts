@@ -18,7 +18,7 @@ export class TweetController extends Controller {
    @Security("jwt")
    @Response(StatusCodes.CREATED)
    @Response(StatusCodes.NOT_FOUND, "original tweet not found")
-   public async createTweet(
+   public createTweet(
       @Request() request: ExpressRequest,
       @Body() body: CreateTweetParams
    ): Promise<Tweet> {
@@ -35,7 +35,7 @@ export class TweetController extends Controller {
    @Security("jwt")
    @Response(StatusCodes.CREATED)
    @Response(StatusCodes.NOT_FOUND, "tweet not found")
-   public async likeTweet(
+   public likeTweet(
       @Path() tweetId: string,
       @Request() request: ExpressRequest,
    ): Promise<Like> {
@@ -52,7 +52,7 @@ export class TweetController extends Controller {
    @Security("jwt")
    @Response(StatusCodes.OK)
    @Response(StatusCodes.NOT_FOUND, "reaction not found")
-   public async unlikeTweet(
+   public unlikeTweet(
       @Path() tweetId: string,
       @Request() request: ExpressRequest,
    ): Promise<Like> {
@@ -67,7 +67,7 @@ export class TweetController extends Controller {
    @Response(StatusCodes.CREATED)
    @Response(StatusCodes.INTERNAL_SERVER_ERROR, "Could not attach picture to tweet")
    @Response(StatusCodes.NOT_FOUND, "Tweet not found")
-   public async attachToTweet(@Path() tweetId: string, @Request() request: ExpressRequest): Promise<Attachment> {
+   public attachToTweet(@Path() tweetId: string, @Request() request: ExpressRequest): Promise<Attachment> {
       const user = request.user as AuthenticatedUser;
       const userId = user.id;
       const service = new TweetService();
@@ -86,5 +86,16 @@ export class TweetController extends Controller {
       return new Promise<void>((resolve, reject) => {
          response.sendFile(info.pictureName, info.options, (err) => { if (err) return reject(err); return resolve(); });
       });
+   }
+
+   @Delete("/{tweetId}")
+   @OperationId("deleteTweet")
+   @Security("jwt")
+   @Response(StatusCodes.OK, "Tweet deleted")
+   @Response(StatusCodes.NOT_FOUND, "Tweet not found")
+   public deleteTweet(@Path() tweetId: string, @Request() request: ExpressRequest): Promise<Tweet> {
+      const user = request.user as AuthenticatedUser;
+      const service = new TweetService();
+      return service.deleteTweet(user.id, tweetId);
    }
 }

@@ -1,7 +1,7 @@
 import TweetDb from "../db/models/tweet";
 import LikeDb from "../db/models/like";
 import AttachmentDb from "../db/models/attachment";
-import { mkdir, stat } from "node:fs/promises";
+import { mkdir, stat, unlink } from "node:fs/promises";
 import { AttachmentNotFoundError, InternalServerError, InvalidMimeTypeError, LikeNotFound, NoPictureUploadedError, TweetNotFoundError } from "../errors";
 import { Attachment, CreateTweetParams, Like, Tweet, TweetAttachmentInfo } from "./models/tweet-models";
 import { UploadedFile } from "express-fileupload";
@@ -111,5 +111,29 @@ export default class TweetService {
       } catch {
          throw new AttachmentNotFoundError();
       }
+   }
+
+   public async deleteTweet(userId: string, tweetId: string): Promise<Tweet> {
+      const tweet = await TweetDb.findOne({ _id: tweetId, userId: userId });
+      if (!tweet) throw new TweetNotFoundError();
+
+      await TweetDb.deleteMany({
+         quoteId: tweetId,
+         text: null,
+      });
+
+      const attachment = tweet.attachmentId;
+      if (attachment) {
+         const path = getAttachmentPath(attachment.toString());
+         try {
+            await unlink(path);
+         } catch (err) {
+            // silently fail (ugh...)
+         }
+      }
+
+      await TweetDb.findByIdAndDelete(tweetId);
+
+      return tweet.toJSON() as Tweet;
    }
 }
