@@ -134,6 +134,6 @@ export default class TweetService {
 
       await TweetDb.findByIdAndDelete(tweetId);
 
-      return tweet.toJSON() as Tweet;
+      return tweet.toJson() as Tweet;
    }
 }

@@ -19,6 +19,13 @@ export default class FollowService {
          followingId: followingId,
       });
 
-      return follow.toJSON();
+      return follow.toJson();
+   }
+
+   public async unfollowUser(params: FollowUnfollowParams): Promise<Follow> {
+      const deleted = await FollowDb.findOneAndDelete(params);
+      if (!deleted) throw new BadRequestError("You aren't following this user")
+
+      return deleted.toJson();
    }
 }

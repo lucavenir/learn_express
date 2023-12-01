@@ -58,7 +58,7 @@ interface FollowDocument extends Document {
    following?: typeof UserDb;
    populateFollowerField: () => Promise<void>;
    populateFollowingField: () => Promise<void>;
-   toJSON: () => any;
+   toJson: () => any;
 }
 
 export default model<FollowDocument>("Follow", FollowSchema);

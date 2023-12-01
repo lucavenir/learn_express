@@ -122,4 +122,23 @@ export class ProfileController extends Controller {
       const service = new FollowService();
       return service.followUser({ followerId, followingId });
    }
+
+   /**
+    * allows a user to unfollow another user.
+    */
+   @Delete("/{userId}/follow")
+   @OperationId("unfollowUser")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.BAD_REQUEST, "Bad Request")
+   public async unfollowUser(
+      @Request() request: ExpressRequest,
+      @Path() userId: string
+   ): Promise<Follow> {
+      const user = request.user as AuthenticatedUser;
+      const followerId = user.id;
+      const followingId = userId;
+      const service = new FollowService();
+      return service.unfollowUser({ followerId, followingId });
+   }
 }
