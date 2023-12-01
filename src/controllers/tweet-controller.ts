@@ -4,7 +4,7 @@ import { Query, Controller, Request, OperationId, Post, Response, Security, Body
 import { StatusCodes } from "http-status-codes";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import TweetService from "../services/tweet-service";
-import { TweetsResponse } from "../services/models/queries-models";
+import { TweetStatsResponse, TweetsResponse } from "../services/models/queries-models";
 import QueriesService from "../services/queries-service";
 
 @Route("/api/v1/tweets")
@@ -148,5 +148,18 @@ export class TweetController extends Controller {
          page: page,
          pageSize: pageSize,
       });
+   }
+
+   /**
+   * Retrieves stats for a tweet: number of reactions, replies and quotes.
+   */
+   @Get("/{tweetId}/stats")
+   @OperationId("getStats")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.UNAUTHORIZED, "Unauthorized")
+   @Security("jwt")
+   public getStats(@Path() tweetId: string): Promise<TweetStatsResponse> {
+      const service = new QueriesService();
+      return service.getTweetStats(tweetId);
    }
 }

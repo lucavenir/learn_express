@@ -1,6 +1,6 @@
 import TweetDb from "../db/models/tweet";
 import LikeDb from "../db/models/like";
-import { TweetsResponse, QueryTweetsParams, RepliesParams, LikesResponse, GetUserLikesParams } from "./models/queries-models";
+import { TweetsResponse, QueryTweetsParams, RepliesParams, LikesResponse, GetUserLikesParams, TweetStatsResponse } from "./models/queries-models";
 const { min } = Math;
 
 export default class QueriesService {
@@ -60,5 +60,13 @@ export default class QueriesService {
          count: likes.length,
          likes: likes.map((like) => like.toJson()),
       };
+   }
+
+   public async getTweetStats(tweetId: string): Promise<TweetStatsResponse> {
+      const likesCount = await LikeDb.countDocuments({ tweetId });
+      const repliesCount = await TweetDb.countDocuments({ replyId: tweetId });
+      const quotesCount = await TweetDb.countDocuments({ quoteId: tweetId });
+
+      return { likes: likesCount, quotes: quotesCount, replies: repliesCount };
    }
 }

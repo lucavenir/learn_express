@@ -29,3 +29,9 @@ export interface LikesResponse {
    count: number;
    likes: Like[];
 }
+
+export interface TweetStatsResponse {
+   likes: number;
+   replies: number;
+   quotes: number;
+}
