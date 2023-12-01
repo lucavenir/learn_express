@@ -9,6 +9,8 @@ import { NoPictureUploadedError } from "../errors";
 import { LikesResponse } from "../services/models/queries-models";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import QueriesService from "../services/queries-service";
+import { Follow } from "../services/models/follow-model";
+import FollowService from "../services/follow-service";
 
 @Route("/api/v1/profile")
 @Tags("profile")
@@ -50,7 +52,7 @@ export class ProfileController extends Controller {
       return service.setProfilePicture(user.id, request as any);
    }
 
-   @Get("picture/{userId}")
+   @Get("{userId}/picture")
    @OperationId("getProfilePicture")
    @Security("jwt")
    @Response(StatusCodes.OK)
@@ -100,5 +102,24 @@ export class ProfileController extends Controller {
          page: page,
          pageSize: pageSize,
       }, user.id);
+   }
+
+   /**
+    * allows a user to follow another user.
+    */
+   @Post("/{userId}/follow")
+   @OperationId("followUser")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.BAD_REQUEST, "Bad Request")
+   public async followUser(
+      @Request() request: ExpressRequest,
+      @Path() userId: string
+   ): Promise<Follow> {
+      const user = request.user as AuthenticatedUser;
+      const followerId = user.id;
+      const followingId = userId;
+      const service = new FollowService();
+      return service.followUser({ followerId, followingId });
    }
 }

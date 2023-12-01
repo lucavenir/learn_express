@@ -96,6 +96,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Follow": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "followerId": {"dataType":"string","required":true},
+            "follower": {"ref":"User"},
+            "followingId": {"dataType":"string","required":true},
+            "following": {"ref":"User"},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Tweet": {
         "dataType": "refObject",
         "properties": {
@@ -136,6 +150,16 @@ const models: TsoaRoute.Models = {
             "totalCount": {"dataType":"double","required":true},
             "count": {"dataType":"double","required":true},
             "tweets": {"dataType":"array","array":{"dataType":"refObject","ref":"Tweet"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TweetStatsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "likes": {"dataType":"double","required":true},
+            "replies": {"dataType":"double","required":true},
+            "quotes": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -332,7 +356,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/v1/profile/picture/:userId',
+        app.get('/api/v1/profile/:userId/picture',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProfileController)),
             ...(fetchMiddlewares<RequestHandler>(ProfileController.prototype.getProfilePicture)),
@@ -408,6 +432,33 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getLikes.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/v1/profile/:userId/follow',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ProfileController)),
+            ...(fetchMiddlewares<RequestHandler>(ProfileController.prototype.followUser)),
+
+            function ProfileController_followUser(request: any, response: any, next: any) {
+            const args = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ProfileController();
+
+
+              const promise = controller.followUser.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -627,6 +678,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.getReplies.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/v1/tweets/:tweetId/stats',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TweetController)),
+            ...(fetchMiddlewares<RequestHandler>(TweetController.prototype.getStats)),
+
+            function TweetController_getStats(request: any, response: any, next: any) {
+            const args = {
+                    tweetId: {"in":"path","name":"tweetId","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TweetController();
+
+
+              const promise = controller.getStats.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
