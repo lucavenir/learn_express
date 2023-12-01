@@ -7,3 +7,12 @@ export interface SetUsernameParams {
 export interface SetUsernameResponse {
    user: User;
 }
+
+export interface DeleteUserStatsResponse {
+   likes: number;
+   attachments: number;
+   tweets: number;
+   profiles: number;
+   follows: number;
+   users: number;
+}
