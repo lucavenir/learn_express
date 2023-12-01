@@ -1,6 +1,5 @@
 import TweetDb from "../db/models/tweet";
-import { Tweet } from "./models/tweet-models";
-import { TweetsResponse, QueryTweetsParams } from "./models/queries-models";
+import { TweetsResponse, QueryTweetsParams, RepliesParams } from "./models/queries-models";
 const { min } = Math;
 
 export default class QuriesService {
@@ -16,14 +15,30 @@ export default class QuriesService {
          limit: pageSize,
          sort: { createdAt: -1 }
       });
-
-
       const totalCount = await TweetDb.countDocuments(request);
+
       return {
-         currentPage: page,
-         count: tweets.length,
          totalCount: totalCount,
-         tweets: tweets.map((tweet) => tweet.toJson() as Tweet),
+         count: tweets.length,
+         tweets: tweets.map((tweet) => tweet.toJson()),
       };
+   }
+
+   public async getReplies(params: RepliesParams): Promise<TweetsResponse> {
+      const pageSize = min(params.pageSize ?? 10, 100);
+      const page = params.page ?? 0;
+
+      const skipped = pageSize * page;
+      const tweets = await TweetDb.find({ replyId: params.tweetId }, null, {
+         skip: skipped,
+         limit: pageSize
+      });
+      const totalCount = await TweetDb.countDocuments({ replyId: params.tweetId });
+
+      return {
+         totalCount: totalCount,
+         count: tweets.length,
+         tweets: tweets.map((tweet) => tweet.toJson()),
+      }
    }
 }

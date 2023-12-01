@@ -4,7 +4,6 @@ import { Query, Controller, Request, OperationId, Post, Response, Security, Body
 import { StatusCodes } from "http-status-codes";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import TweetService from "../services/tweet-service";
-import * as express from "express";
 import { TweetsResponse } from "../services/models/queries-models";
 import QueriesService from "../services/queries-service";
 
@@ -104,15 +103,15 @@ export class TweetController extends Controller {
 
 
    /**
-    * Retrieves posts with given parameters, with pagination.
+    * Retrieves tweets with given parameters, with pagination.
     */
    @Get("")
    @OperationId("queryTweets")
    @Response(StatusCodes.OK)
    @Response(StatusCodes.UNAUTHORIZED, "Unauthorized")
    @Security("jwt")
-   public async queryTweets(
-      @Request() request: express.Request,
+   public queryTweets(
+      @Request() request: ExpressRequest,
       @Query() userId?: string,
       @Query() pageSize?: number,
       @Query() page?: number,
@@ -128,5 +127,26 @@ export class TweetController extends Controller {
          },
          uId
       );
+   }
+
+   /**
+   * Retrieves replies to a tweet with given parameters, with pagination.
+   */
+   @Get("/{tweetId}/replies")
+   @OperationId("getReplies")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.UNAUTHORIZED, "Unauthorized")
+   @Security("jwt")
+   public getReplies(
+      @Path() tweetId: string,
+      @Query() pageSize?: number,
+      @Query() page?: number,
+   ): Promise<TweetsResponse> {
+      const service = new QueriesService();
+      return service.getReplies({
+         tweetId: tweetId,
+         page: page,
+         pageSize: pageSize,
+      });
    }
 }

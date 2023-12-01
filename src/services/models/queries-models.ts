@@ -7,8 +7,13 @@ export interface QueryTweetsParams {
 }
 
 export interface TweetsResponse {
-   currentPage: number;
-   count: number;
    totalCount: number;
+   count: number;
    tweets: Tweet[];
+}
+
+export interface RepliesParams {
+   tweetId: string;
+   pageSize?: number;
+   page?: number;
 }
