@@ -2,10 +2,13 @@ import { StatusCodes } from "http-status-codes";
 import { Profile } from "../services/models/profile-models";
 import ProfileService from "../services/profile-service";
 import {
-   Controller, Request, Body, Response, Delete, Get, Post, OperationId, Path, Route, Security, Tags,
+   Controller, Request, Body, Response, Delete, Get, Post, OperationId, Path, Route, Security, Tags, Query,
 } from "tsoa";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { NoPictureUploadedError } from "../errors";
+import { LikesResponse } from "../services/models/queries-models";
+import AuthenticatedUser from "../middleware/models/authenticated-user";
+import QueriesService from "../services/queries-service";
 
 @Route("/api/v1/profile")
 @Tags("profile")
@@ -74,5 +77,28 @@ export class ProfileController extends Controller {
       this.setStatus(StatusCodes.NO_CONTENT);
       const service = new ProfileService();
       return service.deleteProfilePicture(user.id);
+   }
+
+   /**
+    * Retrieves reactions made by a user, with pagination.
+    */
+   @Get("/{userId}/like")
+   @OperationId("getLikes")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.UNAUTHORIZED, "Unauthorized")
+   @Security("jwt")
+   public getLikes(
+      @Request() request: ExpressRequest,
+      @Path() userId: string,
+      @Query() pageSize?: number,
+      @Query() page?: number,
+   ): Promise<LikesResponse> {
+      const user = request.user as AuthenticatedUser;
+      const service = new QueriesService();
+      return service.getLikes({
+         userId: userId,
+         page: page,
+         pageSize: pageSize,
+      }, user.id);
    }
 }

@@ -1,4 +1,4 @@
-import { Tweet } from './tweet-models';
+import { Like, Tweet } from './tweet-models';
 
 export interface QueryTweetsParams {
    userId?: string;
@@ -16,4 +16,16 @@ export interface RepliesParams {
    tweetId: string;
    pageSize?: number;
    page?: number;
+}
+
+export interface GetUserLikesParams {
+   userId?: string;
+   pageSize?: number;
+   page?: number;
+}
+
+export interface LikesResponse {
+   totalCount: number;
+   count: number;
+   likes: Like[];
 }
