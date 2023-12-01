@@ -52,4 +52,27 @@ export default class FollowService {
          follows: results.map((f) => f.toJson()),
       };
    }
+
+   public async getFollowers(params: FollowingFollowersParams): Promise<FollowsResponse> {
+      const request = { followingId: params.userId };
+      const page = params.page ?? 0;
+      const pageSize = min(params.pageSize ?? 10, 100);
+      const skipped = page * pageSize;
+      const results = await FollowDb.find(request, null, {
+         skip: skipped,
+         limit: pageSize,
+         sort: { createdAt: -1 }
+      });
+      const totalCount = await FollowDb.countDocuments(request);
+
+      await Promise.all(
+         results.map((f) => f.populateFollowerField()),
+      );
+
+      return {
+         totalCount: totalCount,
+         count: results.length,
+         follows: results.map((f) => f.toJson())
+      };
+   }
 }

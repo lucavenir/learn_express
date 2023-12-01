@@ -157,4 +157,20 @@ export class ProfileController extends Controller {
       const service = new FollowService();
       return service.getFollowing({ userId, pageSize, page });
    }
+
+   /**
+    * Retrieves the list of users that are following the specified user.
+    */
+   @Get("/{userId}/followers")
+   @OperationId("getUserFollowers")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   public getUserFollowers(
+      @Path() userId: string,
+      @Query() pageSize?: number,
+      @Query() page?: number
+   ): Promise<FollowsResponse> {
+      const service = new FollowService();
+      return service.getFollowers({ userId, pageSize, page });
+   }
 }
