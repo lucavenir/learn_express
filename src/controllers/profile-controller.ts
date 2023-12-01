@@ -9,7 +9,7 @@ import { NoPictureUploadedError } from "../errors";
 import { LikesResponse } from "../services/models/queries-models";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import QueriesService from "../services/queries-service";
-import { Follow } from "../services/models/follow-model";
+import { Follow, FollowsResponse } from "../services/models/follow-model";
 import FollowService from "../services/follow-service";
 
 @Route("/api/v1/profile")
@@ -140,5 +140,21 @@ export class ProfileController extends Controller {
       const followingId = userId;
       const service = new FollowService();
       return service.unfollowUser({ followerId, followingId });
+   }
+
+   /**
+    * Retrieves the list of users that the specified user is following.
+    */
+   @Get("/{userId}/following")
+   @OperationId("getUserFollowing")
+   @Security("jwt")
+   @Response(StatusCodes.OK)
+   public getUserFollowing(
+      @Path() userId: string,
+      @Query() pageSize?: number,
+      @Query() page?: number
+   ): Promise<FollowsResponse> {
+      const service = new FollowService();
+      return service.getFollowing({ userId, pageSize, page });
    }
 }

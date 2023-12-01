@@ -14,3 +14,15 @@ export interface FollowUnfollowParams {
    followerId: string;
    followingId: string;
 }
+
+export interface FollowingFollowersParams {
+   userId: string;
+   pageSize?: number;
+   page?: number;
+}
+
+export interface FollowsResponse {
+   totalCount: number;
+   count: number;
+   follows: Follow[];
+}

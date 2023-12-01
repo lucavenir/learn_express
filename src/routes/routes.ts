@@ -110,6 +110,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "FollowsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "totalCount": {"dataType":"double","required":true},
+            "count": {"dataType":"double","required":true},
+            "follows": {"dataType":"array","array":{"dataType":"refObject","ref":"Follow"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Tweet": {
         "dataType": "refObject",
         "properties": {
@@ -486,6 +496,34 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.unfollowUser.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/v1/profile/:userId/following',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ProfileController)),
+            ...(fetchMiddlewares<RequestHandler>(ProfileController.prototype.getUserFollowing)),
+
+            function ProfileController_getUserFollowing(request: any, response: any, next: any) {
+            const args = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
+                    pageSize: {"in":"query","name":"pageSize","dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ProfileController();
+
+
+              const promise = controller.getUserFollowing.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
