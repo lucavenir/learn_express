@@ -1,9 +1,12 @@
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 import { Attachment, CreateTweetParams, Like, Tweet } from "../services/models/tweet-models";
-import { Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path, Delete, Patch, Get } from "tsoa";
+import { Query, Controller, Request, OperationId, Post, Response, Security, Body, Route, Tags, Path, Delete, Patch, Get } from "tsoa";
 import { StatusCodes } from "http-status-codes";
 import AuthenticatedUser from "../middleware/models/authenticated-user";
 import TweetService from "../services/tweet-service";
+import * as express from "express";
+import { TweetsResponse } from "../services/models/queries-models";
+import QueriesService from "../services/queries-service";
 
 @Route("/api/v1/tweets")
 @Tags("tweets")
@@ -97,5 +100,33 @@ export class TweetController extends Controller {
       const user = request.user as AuthenticatedUser;
       const service = new TweetService();
       return service.deleteTweet(user.id, tweetId);
+   }
+
+
+   /**
+    * Retrieves posts with given parameters, with pagination.
+    */
+   @Get("")
+   @OperationId("queryTweets")
+   @Response(StatusCodes.OK)
+   @Response(StatusCodes.UNAUTHORIZED, "Unauthorized")
+   @Security("jwt")
+   public async queryTweets(
+      @Request() request: express.Request,
+      @Query() userId?: string,
+      @Query() pageSize?: number,
+      @Query() page?: number,
+   ): Promise<TweetsResponse> {
+      const user = request.user as AuthenticatedUser;
+      const uId = userId ?? user.id;
+      const service = new QueriesService();
+      return service.queryTweets(
+         {
+            userId: uId,
+            pageSize,
+            page,
+         },
+         uId
+      );
    }
 }
